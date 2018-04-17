@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-
 public class BluetoothConnect extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,4 +18,18 @@ public class BluetoothConnect extends AppCompatActivity {
             transaction.commit();
         }
     }
+
+    public void search(){
+        //populate list in RecyclerviewFragment fragment
+
+    }
+
+
+    public void qr(){
+        //activate qr rec, try to connect, and send error if unable to
+
+    }
+
+
+
 }

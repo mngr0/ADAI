@@ -17,12 +17,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBLE(View view) {
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Hello toast!", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getApplicationContext(), "go ble!", Toast.LENGTH_SHORT);
         toast.show();
 
         Intent intent = new Intent(this, BluetoothConnect.class);
         startActivity(intent);
     }
 
+    public void showFormatSetting(View view) {
 
+        Toast toast = Toast.makeText(getApplicationContext(), "go format_setting!", Toast.LENGTH_SHORT);
+        toast.show();
+
+        Intent intent = new Intent(this, FormatSetting.class);
+        startActivity(intent);
+    }
 }

@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.marco.myfeeder.bluetooth.BluetoothConnect;
+import com.example.marco.myfeeder.settings.FormatSetting;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +33,17 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
 
         Intent intent = new Intent(this, FormatSetting.class);
+        startActivity(intent);
+    }
+
+
+
+    public void showFormatSelection(View view) {
+
+        Toast toast = Toast.makeText(getApplicationContext(), "go format_selection!", Toast.LENGTH_SHORT);
+        toast.show();
+
+        Intent intent = new Intent(this, FormatSelection.class);
         startActivity(intent);
     }
 }

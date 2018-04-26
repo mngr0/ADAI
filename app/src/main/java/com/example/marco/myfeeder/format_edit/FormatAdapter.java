@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.marco.myfeeder;
+package com.example.marco.myfeeder.format_edit;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -25,16 +25,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marco.myfeeder.R;
 
-/**
- * Provide views to RecyclerView with data from mDataSet.
- */
-public class FormatAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+
+public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
     private static final String TAG = "FormatAdapter";
 
     private String[] mDataSet;
 
-    public static class BiewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
 
         public ViewHolder(View v) {
@@ -47,7 +46,7 @@ public class FormatAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     toast.show();
                 }
             });
-            textView = v.findViewById(R.id.textView);
+            textView = v.findViewById(R.id.textView6);
         }
 
         public TextView getTextView() {
@@ -61,15 +60,15 @@ public class FormatAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
 
     @Override
-    public BiewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_item, viewGroup, false);
-        return new BiewHolder(v);
+                .inflate(R.layout.item_schedule_element, viewGroup, false);
+        return new ViewHolder(v);
     }
 
 
     @Override
-    public void onBindViewHolder(BiewHolder viewHolder, final int position) {
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
         viewHolder.getTextView().setText(mDataSet[position]);
     }

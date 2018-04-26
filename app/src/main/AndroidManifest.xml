@@ -19,14 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BluetoothConnect">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".FormatSetting"></activity>
-        <activity android:name=".SendReport"></activity>
+        <activity android:name=".bluetooth.BluetoothConnect"/>
+        <activity android:name=".settings.FormatSetting"/>
+        <activity android:name=".FormatSelection"/>
+        <activity android:name=".SendReport"/>
+        <activity android:name=".format_edit.FormatEdit"/>
     </application>
 
 </manifest>

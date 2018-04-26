@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.example.marco.myfeeder;
+package com.example.marco.myfeeder.bluetooth;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.marco.myfeeder.R;
 
 
 /**
@@ -71,7 +73,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_item, viewGroup, false);
+                .inflate(R.layout.item_text_row, viewGroup, false);
 
         return new ViewHolder(v);
     }

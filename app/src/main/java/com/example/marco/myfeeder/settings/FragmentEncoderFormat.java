@@ -1,15 +1,17 @@
-package com.example.marco.myfeeder;
+package com.example.marco.myfeeder.settings;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.marco.myfeeder.format_edit.FormatAdapter;
+import com.example.marco.myfeeder.R;
 
 
 /**
@@ -17,12 +19,10 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link FragmentEncoderFormat.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentEncoderFormat#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class FragmentEncoderFormat extends Fragment {
 
-    protected RecyclerView mRecyclerView;
+   // protected RecyclerView mRecyclerView;
     protected FormatAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected String[] mDataset;
@@ -36,7 +36,10 @@ public class FragmentEncoderFormat extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO init data here
+        mDataset = new String[10];
+        for (int i = 0; i < 10; i++) {
+            mDataset[i] = "" + i;
+        }
     }
 
     @Override
@@ -45,27 +48,14 @@ public class FragmentEncoderFormat extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_encoder_format, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+      //  mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView2);
         mLayoutManager = new LinearLayoutManager(getActivity());
-        setRecyclerViewLayoutManager();
         mAdapter = new FormatAdapter(mDataset);
-        mRecyclerView.setAdapter(mAdapter);
+        //mRecyclerView.setAdapter(mAdapter);
         return rootView;
-
     }
-    public void setRecyclerViewLayoutManager() {
-        int scrollPosition = 0;
 
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

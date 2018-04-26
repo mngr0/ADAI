@@ -1,15 +1,17 @@
-package com.example.marco.myfeeder;
+package com.example.marco.myfeeder.bluetooth;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.marco.myfeeder.R;
 
 public class BluetoothConnect extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_connect);
+        setContentView(R.layout.activity_bluetooth_connect);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

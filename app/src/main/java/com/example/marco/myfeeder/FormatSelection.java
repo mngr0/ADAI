@@ -3,6 +3,7 @@ package com.example.marco.myfeeder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -99,6 +100,7 @@ public class FormatSelection extends AppCompatActivity {
         Toast toast = Toast.makeText(getApplicationContext(), "go format_setting!", Toast.LENGTH_SHORT);
         toast.show();
         Intent intent = new Intent(this, FormatEdit.class);
+        intent.setData(Uri.parse(index+""));
         startActivityForResult(intent, 42);
 
     }

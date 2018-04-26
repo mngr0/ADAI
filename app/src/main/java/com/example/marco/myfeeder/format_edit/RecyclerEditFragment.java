@@ -35,7 +35,7 @@ import com.example.marco.myfeeder.bluetooth.CustomAdapter;
 public class RecyclerEditFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-    private static final int DATASET_COUNT = 60;
+    private static final int DATASET_COUNT = 4;
 
 
     protected RecyclerView mRecyclerView;

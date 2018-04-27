@@ -18,7 +18,7 @@ import com.example.marco.myfeeder.bluetooth.RecyclerViewFragment;
 import com.example.marco.myfeeder.settings.FragmentEncoderFormat;
 
 public class FormatEdit extends AppCompatActivity {
-
+    RecyclerEditFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +31,11 @@ public class FormatEdit extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            RecyclerEditFragment fragment = new RecyclerEditFragment();
-            transaction.replace(R.id.edit_content_fragment, fragment);
+            mFragment = new RecyclerEditFragment();
+            transaction.replace(R.id.edit_content_fragment, mFragment);
             transaction.commit();
         }
-        
+
     }
 
 
@@ -43,6 +43,11 @@ public class FormatEdit extends AppCompatActivity {
         Intent result = new Intent("com.example.RESULT_ACTION", Uri.parse("content://result_uri"));
         setResult(Activity.RESULT_OK, result);
         finish();
+
+    }
+
+    public void addElement(View view){
+        mFragment.addElementIn(view);
 
     }
 

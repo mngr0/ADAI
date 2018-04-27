@@ -17,45 +17,75 @@
 package com.example.marco.myfeeder.format_edit;
 
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.myfeeder.R;
 
+import java.util.ArrayList;
+
 
 public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
     private static final String TAG = "FormatAdapter";
 
-    private String[] mDataSet;
+    private ArrayList<String> mItems;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+    class RemoveListener implements View.OnClickListener{
+
+        private ArrayList<String> mItems;
+        private int mIndex;
+        private FormatAdapter mAdapter;
+
+        public RemoveListener(FormatAdapter adapter,ArrayList<String> items, int index) {
+            mItems = items;
+            mIndex = index;
+            mAdapter = adapter;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+           // Toast toast = Toast.makeText(mt, "removing"+ mIndex, Toast.LENGTH_SHORT);
+           // toast.show();
+            mItems.remove(mIndex);
+            mAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+
+
+
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
         private final TextView textView;
+        private final Button button;
 
         public ViewHolder(View v) {
             super(v);
             final Context t=v.getContext();
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast toast = Toast.makeText(t, "Element " + getAdapterPosition() + " clicked.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            });
             textView = v.findViewById(R.id.textView6);
+            button = v.findViewById(R.id.button13);
         }
 
-        public TextView getTextView() {
-            return textView;
-        }
+        public TextView getTextView(){return textView;}
+
+        public Button getButton(){return button;}
+
     }
 
-    public FormatAdapter(String[] dataSet) {
-        mDataSet = dataSet;
+    public FormatAdapter(ArrayList<String> items) {
+        mItems= items;
     }
 
 
@@ -70,11 +100,12 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-        viewHolder.getTextView().setText(mDataSet[position]);
+        viewHolder.getTextView().setText(mItems.get(position));
+        viewHolder.getButton().setOnClickListener(new RemoveListener(this,mItems,position));
     }
 
     @Override
     public int getItemCount() {
-        return mDataSet.length;
+        return mItems.size();
     }
 }

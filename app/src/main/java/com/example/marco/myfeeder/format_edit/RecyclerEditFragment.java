@@ -24,9 +24,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.marco.myfeeder.R;
 import com.example.marco.myfeeder.bluetooth.CustomAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
@@ -41,7 +44,7 @@ public class RecyclerEditFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     protected FormatAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] mDataset;
+    ArrayList<String> mItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class RecyclerEditFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView3);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-        mAdapter = new FormatAdapter(mDataset);
+        mAdapter = new FormatAdapter(mItems);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -83,9 +86,15 @@ public class RecyclerEditFragment extends Fragment {
     }
 
     private void initDataset() {
-        mDataset = new String[DATASET_COUNT];
+        mItems = new ArrayList<String>(DATASET_COUNT);
         for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset[i] = "" + i;
+            mItems.add(new String ("" + i));
         }
+    }
+
+
+    public void addElementIn(View view){
+        mItems.add("hey"+ mItems.size());
+        mAdapter.notifyItemInserted(mItems.size() - 1);
     }
 }

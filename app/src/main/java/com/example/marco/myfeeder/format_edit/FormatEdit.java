@@ -6,16 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.marco.myfeeder.R;
-import com.example.marco.myfeeder.bluetooth.RecyclerViewFragment;
-import com.example.marco.myfeeder.settings.FragmentEncoderFormat;
 
 public class FormatEdit extends AppCompatActivity {
     RecyclerEditFragment mFragment;

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.example.marco.myfeeder.bluetooth;
+package com.example.marco.myfeeder.bluetooth_ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.example.marco.myfeeder.R;
 
+import java.util.ArrayList;
+
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
@@ -34,7 +36,7 @@ import com.example.marco.myfeeder.R;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
 
-    private String[] mDataSet;
+    private ArrayList<String> mDataSet;
 
     // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
@@ -64,7 +66,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     // END_INCLUDE(recyclerViewSampleViewHolder)
 
 
-    public CustomAdapter(String[] dataSet) {
+    public CustomAdapter(ArrayList<String> dataSet) {
         mDataSet = dataSet;
     }
 
@@ -81,11 +83,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-        viewHolder.getTextView().setText(mDataSet[position]);
+        viewHolder.getTextView().setText(mDataSet.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mDataSet.length;
+        return mDataSet.size();
     }
 }

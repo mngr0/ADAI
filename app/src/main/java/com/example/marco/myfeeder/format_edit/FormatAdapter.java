@@ -52,19 +52,11 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-
-           // Toast toast = Toast.makeText(mt, "removing"+ mIndex, Toast.LENGTH_SHORT);
-           // toast.show();
             mItems.remove(mIndex);
             mAdapter.notifyDataSetChanged();
 
         }
     }
-
-
-
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -88,14 +80,12 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         mItems= items;
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_schedule_element, viewGroup, false);
         return new ViewHolder(v);
     }
-
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {

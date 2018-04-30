@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.marco.myfeeder.bluetooth;
+package com.example.marco.myfeeder.bluetooth_ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.marco.myfeeder.R;
+
+import java.util.ArrayList;
 
 /**
  * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
@@ -40,7 +42,7 @@ public class RecyclerViewFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     protected CustomAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] mDataset;
+    ArrayList<String> mItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-        mAdapter = new CustomAdapter(mDataset);
+        mAdapter = new CustomAdapter(mItems);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -86,9 +88,27 @@ public class RecyclerViewFragment extends Fragment {
      * from a local content provider or remote server.
      */
     private void initDataset() {
-        mDataset = new String[DATASET_COUNT];
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset[i] = "This is element #" + i;
+        mItems = new ArrayList<String>();
+        //for (int i = 0; i < DATASET_COUNT; i++) {
+         //   mItems.add("This is element #" + i);
+       // }
+    }
+
+    public void reset(){
+        //mItems=new ArrayList<String>();
+        while (mItems.size()>0){
+            mItems.remove(0);
         }
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    public void addElementIn(String text){
+        mItems.add(text);
+        mAdapter .notifyItemInserted(mItems.size() - 1);
+    }
+
+    public int getItemCount() {
+        return mAdapter.getItemCount();
     }
 }

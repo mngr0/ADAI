@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.marco.myfeeder.bluetooth.BluetoothConnect;
+import com.example.marco.myfeeder.bluetooth_ui.BluetoothConnect;
 import com.example.marco.myfeeder.settings.FormatSetting;
 
 

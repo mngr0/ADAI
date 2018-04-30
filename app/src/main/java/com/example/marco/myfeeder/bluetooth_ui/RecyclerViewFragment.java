@@ -16,6 +16,7 @@
 
 package com.example.marco.myfeeder.bluetooth_ui;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -36,18 +37,15 @@ import java.util.ArrayList;
 public class RecyclerViewFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-    private static final int DATASET_COUNT = 60;
-
 
     protected RecyclerView mRecyclerView;
     protected CustomAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    ArrayList<String> mItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataset();
+
     }
 
     @Override
@@ -58,7 +56,7 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-        mAdapter = new CustomAdapter(mItems);
+        mAdapter = new CustomAdapter();
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -79,36 +77,21 @@ public class RecyclerViewFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save currently selected layout manager.
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    /**
-     * Generates Strings for RecyclerView's adapter. This data would usually come
-     * from a local content provider or remote server.
-     */
-    private void initDataset() {
-        mItems = new ArrayList<String>();
-        //for (int i = 0; i < DATASET_COUNT; i++) {
-         //   mItems.add("This is element #" + i);
-       // }
-    }
 
     public void reset(){
-        //mItems=new ArrayList<String>();
-        while (mItems.size()>0){
-            mItems.remove(0);
-        }
-        mAdapter.notifyDataSetChanged();
+        mAdapter.clear();
     }
 
 
-    public void addElementIn(String text){
-        mItems.add(text);
-        mAdapter .notifyItemInserted(mItems.size() - 1);
+    public void addElementIn(String name, String address, BluetoothDevice device){
+        mAdapter.addElement(name,address,device);
     }
 
-    public int getItemCount() {
+    public int getItemCount(){
         return mAdapter.getItemCount();
     }
+
 }

@@ -41,7 +41,7 @@ public class FormatEdit extends AppCompatActivity {
     }
 
     public void addElement(View view){
-        mFragment.addElementIn(view);
+        mFragment.addElementIn();
 
     }
 

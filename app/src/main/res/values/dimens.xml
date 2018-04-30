@@ -16,5 +16,5 @@
 -->
 
 <resources>
-    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_height">144dp</dimen>
 </resources>

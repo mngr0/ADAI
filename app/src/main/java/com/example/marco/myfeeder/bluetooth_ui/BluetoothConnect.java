@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.example.marco.myfeeder.QRActivity;
@@ -38,14 +39,16 @@ public class BluetoothConnect extends AppCompatActivity {
         mStateBT=(TextView) findViewById(R.id.textStateBT);
         mStateQR=(TextView) findViewById(R.id.textStateQR);
 
-
-
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             mFragment = new RecyclerViewFragment();
             transaction.replace(R.id.sample_content_fragment, mFragment);
             transaction.commit();
         }
+
+       // IntentFilter filter2 = new IntentFilter();
+       // filter2.addAction(EXTRA_DEVICE_ADDRESS);
+       // registerReceiver(mQRReceiver, filter2);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -64,6 +67,15 @@ public class BluetoothConnect extends AppCompatActivity {
         }
 
         mStateQR.setText("press qr to read");
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("oAR",data.toString());
+        String x=data.getData().toString();
+        Log.d("oAR",x);
+        mStateQR.setText(x);
 
     }
 
@@ -125,7 +137,7 @@ public class BluetoothConnect extends AppCompatActivity {
 
         Intent intent = new Intent(this, QRActivity.class);
         Log.d("BT QR", "intent created");
-        startActivity(intent);
+        startActivityForResult(intent, 43);
     }
 
 
@@ -162,21 +174,34 @@ public class BluetoothConnect extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    mFragment.addElementIn(device.getName() + "\n" + device.getAddress());
+                    mFragment.addElementIn(device.getName() , device.getAddress(), device);
                     //mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d("BT CNT", "end");
+
                 setProgressBarIndeterminateVisibility(false);
-                if (mFragment.getItemCount() == 0) {
+                if ((mFragment.getItemCount() == 0 )&& (!mBtAdapter.isDiscovering())) {
+                    mStateBT.setText("search completed");
                     //  String noDevices = getResources().getText(R.string.none_found).toString();
                     //  mNewDevicesArrayAdapter.add(noDevices);
-                    mFragment.addElementIn("nothing found");
+                    mFragment.addElementIn("nothing found","", null);
                 }
             }
         }
     };
 
+    private final BroadcastReceiver mQRReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("QRR",intent.getData().toString());
+            String action = intent.getAction();
 
+            // When discovery finds a device
+            if (EXTRA_DEVICE_ADDRESS.equals(action)) {
+                Log.d("QRRi",intent.getData().toString());
+            }
+        }
+    };
 }

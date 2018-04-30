@@ -86,13 +86,13 @@ public class RecyclerEditFragment extends Fragment {
     private void initDataset() {
         mItems = new ArrayList<String>(DATASET_COUNT);
         for (int i = 0; i < DATASET_COUNT; i++) {
-            mItems.add(new String ("" + i));
+            mItems.add(new String ("Spazio" ));
         }
     }
 
 
-    public void addElementIn(View view){
-        mItems.add("hey"+ mItems.size());
+    public void addElementIn(){
+        mItems.add("Spazio");
         mAdapter.notifyItemInserted(mItems.size() - 1);
     }
 }

@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.marco.myfeeder.R;
+import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 import java.util.ArrayList;
 
@@ -90,6 +91,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Log.d("BTC","connect"+mAddresses.get(position));
+                BluetoothChatService.getInstance().connect(mDevices.get(position),true);
             }
         });
 

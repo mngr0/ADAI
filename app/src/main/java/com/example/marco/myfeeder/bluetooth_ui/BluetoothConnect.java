@@ -46,10 +46,6 @@ public class BluetoothConnect extends AppCompatActivity {
             transaction.commit();
         }
 
-       // IntentFilter filter2 = new IntentFilter();
-       // filter2.addAction(EXTRA_DEVICE_ADDRESS);
-       // registerReceiver(mQRReceiver, filter2);
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -173,10 +169,10 @@ public class BluetoothConnect extends AppCompatActivity {
                 Log.d("BT CNT", "FOUND!!!");
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    mFragment.addElementIn(device.getName() , device.getAddress(), device);
-                    //mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                }
+
+                mFragment.addElementIn(device.getName() , device.getAddress(), device);
+                //mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d("BT CNT", "end");

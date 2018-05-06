@@ -17,10 +17,6 @@ import com.example.marco.myfeeder.settings.FormatSetting;
 
 public class MainActivity extends AppCompatActivity {
 
-    public MainActivity() {
-        BluetoothChatService.createInstance(mHandler);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,29 +25,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showBLE(View view) {
-
-        Toast toast = Toast.makeText(getApplicationContext(), "go ble!", Toast.LENGTH_SHORT);
-        toast.show();
-
         Intent intent = new Intent(this, BluetoothConnect.class);
         startActivity(intent);
     }
 
     public void showFormatSetting(View view) {
-
-        Toast toast = Toast.makeText(getApplicationContext(), "go format_setting!", Toast.LENGTH_SHORT);
-        toast.show();
-
         Intent intent = new Intent(this, FormatSetting.class);
         startActivity(intent);
     }
 
 
     public void showFormatSelection(View view) {
-
-        Toast toast = Toast.makeText(getApplicationContext(), "go format_selection!", Toast.LENGTH_SHORT);
-        toast.show();
-
         Intent intent = new Intent(this, FormatSelection.class);
         startActivity(intent);
     }
@@ -64,17 +48,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d("handler", msg.toString());
-            byte[] readBuf = (byte[]) msg.obj;
-            // construct a string from the valid bytes in the buffer
-            String readMessage = "null";
-            if((readBuf!= null)&&(msg.arg1>0))
-                readMessage = new String(readBuf, 0, msg.arg1);
-            Log.d("handler", readMessage);
-        }
-    };
+
 }

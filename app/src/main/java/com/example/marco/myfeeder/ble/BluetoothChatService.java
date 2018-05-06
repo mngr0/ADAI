@@ -1,19 +1,19 @@
 package com.example.marco.myfeeder.ble;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.marco.myfeeder.Configuration;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 
@@ -41,6 +41,11 @@ public class BluetoothChatService {
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
 
     private static BluetoothChatService instance;
+    private Configuration mConfiguration;
+
+    public Configuration getmConfiguration(){
+        return mConfiguration;
+    }
 
     public static BluetoothChatService createInstance(Handler handler) {
         if (instance == null) {
@@ -50,6 +55,9 @@ public class BluetoothChatService {
     }
 
     public static BluetoothChatService getInstance() {
+        if (instance == null) {
+            instance = new BluetoothChatService(mmHandler);
+        }
         return instance;
     }
 
@@ -59,6 +67,11 @@ public class BluetoothChatService {
         mNewState = mState;
         mHandler = handler;
     }
+
+    public boolean isConnected(){
+        return mState == STATE_CONNECTED;
+    }
+
 
     private synchronized void updateUserInterfaceTitle() {
 
@@ -330,6 +343,7 @@ public class BluetoothChatService {
                     // Read from the InputStream
                     //try
                     bytes = mmInStream.read(buffer);
+                    //read setted value
 
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
@@ -363,6 +377,21 @@ public class BluetoothChatService {
             }
         }
     }
+
+    @SuppressLint("HandlerLeak")
+    private static final Handler mmHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d("handler", msg.toString());
+            byte[] readBuf = (byte[]) msg.obj;
+            // construct a string from the valid bytes in the buffer
+            String readMessage = "null";
+            if((readBuf!= null)&&(msg.arg1>0))
+                readMessage = new String(readBuf, 0, msg.arg1);
+            Log.d("handler", readMessage);
+        }
+    };
+
 }
 
 

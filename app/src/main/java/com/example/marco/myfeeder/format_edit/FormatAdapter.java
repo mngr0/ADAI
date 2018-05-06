@@ -24,10 +24,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.R;
+import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 import java.util.ArrayList;
 
@@ -35,16 +38,16 @@ import java.util.ArrayList;
 public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
     private static final String TAG = "FormatAdapter";
 
-    private ArrayList<String> mItems;
+    private ArrayList<sd> mItems;
+    private int mIndex;
 
+    class RemoveListener implements View.OnClickListener {
 
-    class RemoveListener implements View.OnClickListener{
-
-        private ArrayList<String> mItems;
+        private ArrayList<sd> mItems;
         private int mIndex;
         private FormatAdapter mAdapter;
 
-        public RemoveListener(FormatAdapter adapter,ArrayList<String> items, int index) {
+        public RemoveListener(FormatAdapter adapter, ArrayList<sd> items, int index) {
             mItems = items;
             mIndex = index;
             mAdapter = adapter;
@@ -62,22 +65,38 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
         private final TextView textView;
         private final Button button;
+        private final EditText spaceText;
+        private final EditText lineText;
 
         public ViewHolder(View v) {
             super(v);
-            final Context t=v.getContext();
+            final Context t = v.getContext();
             textView = v.findViewById(R.id.textView6);
             button = v.findViewById(R.id.button13);
+            spaceText = v.findViewById(R.id.spaceText);
+            lineText = v.findViewById(R.id.lineText);
         }
 
-        public TextView getTextView(){return textView;}
+        public TextView getTextView() {
+            return textView;
+        }
 
-        public Button getButton(){return button;}
+        public Button getButton() {
+            return button;
+        }
 
+        public void setSpaceText(String text){
+            spaceText.setText(text);
+        }
+
+        public void setLineText(String text){
+            lineText.setText(text);
+        }
     }
 
-    public FormatAdapter(ArrayList<String> items) {
-        mItems= items;
+    public FormatAdapter(ArrayList<sd> items,int index) {
+        mItems = items;
+        mIndex=index;
     }
 
     @Override
@@ -90,8 +109,10 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-        viewHolder.getTextView().setText(mItems.get(position));
-        viewHolder.getButton().setOnClickListener(new RemoveListener(this,mItems,position));
+        //viewHolder.getTextView().setText(mItems.get(position).a);
+        viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems, position));
+        viewHolder.setSpaceText(mItems.get(position).a);
+        viewHolder.setLineText(mItems.get(position).b);
     }
 
     @Override

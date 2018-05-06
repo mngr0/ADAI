@@ -1,6 +1,5 @@
 package com.example.marco.myfeeder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,10 +17,10 @@ public class FormatSelection extends AppCompatActivity {
 
     static final int size = 8;
     private static View[] viewArray = new View[size];
-    private static int activeRadio;
+    private static Configuration mConfiguration;
 
-    public static void setRadio(int index) {
-        if (index == activeRadio) {
+    public static void setRadio(int index, boolean check) {
+        if ((index == mConfiguration.active) && (!check)) {
             return;
         }
         for (int i = 0; i < size; i++) {
@@ -31,7 +30,7 @@ public class FormatSelection extends AppCompatActivity {
                 ((RadioButton) viewArray[i].findViewById(R.id.radioButton3)).setChecked(true);
             }
         }
-        activeRadio = index;
+        mConfiguration.active = index;
     }
 
     public class ButtonListener implements View.OnClickListener {
@@ -76,7 +75,7 @@ public class FormatSelection extends AppCompatActivity {
         public void onClick(View v) {
             Toast toast = Toast.makeText(mContext, "Element " + mIndex + " clicked.", Toast.LENGTH_SHORT);
             toast.show();
-            FormatSelection.setRadio(mIndex);
+            FormatSelection.setRadio(mIndex, false);
         }
     }
 
@@ -91,8 +90,22 @@ public class FormatSelection extends AppCompatActivity {
             list.addView(viewArray[i]);
             viewArray[i].findViewById(R.id.button19).setOnClickListener(new ButtonListener(i, t, this));
             viewArray[i].findViewById(R.id.radioButton3).setOnClickListener(new RadioListener(i, t));
-            ((TextView) viewArray[i].findViewById(R.id.textView4)).setText("conf" + i);
+            ((TextView) viewArray[i].findViewById(R.id.nameText)).setText(Configuration.formats[i].name);
         }
+        // BluetoothChatService mBTC = BluetoothChatService.getInstance();
+        // mConfiguration = BluetoothChatService.getInstance().getmConfiguration();
+        // if(!mBTC.isConnected()){
+        //     //showtoast
+        // }
+        // else{
+        //    setRadio(mConfiguration.active,true);
+        // }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setRadio(Configuration.active, true);
     }
 
     public void showFormatEdit(int index) {
@@ -100,7 +113,7 @@ public class FormatSelection extends AppCompatActivity {
         Toast toast = Toast.makeText(getApplicationContext(), "go format_setting!", Toast.LENGTH_SHORT);
         toast.show();
         Intent intent = new Intent(this, FormatEdit.class);
-        intent.setData(Uri.parse(index+""));
+        intent.setData(Uri.parse(index + ""));
         startActivityForResult(intent, 42);
 
     }

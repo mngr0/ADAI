@@ -35,6 +35,8 @@ import java.util.ArrayList;
  */
 public class RecyclerEditFragment extends Fragment {
 
+
+
     private static final String TAG = "RecyclerViewFragment";
     private static final int DATASET_COUNT = 4;
 
@@ -42,7 +44,9 @@ public class RecyclerEditFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     protected FormatAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    ArrayList<String> mItems;
+    ArrayList<sd> mItems;
+    private int mIndex;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class RecyclerEditFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView3);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-        mAdapter = new FormatAdapter(mItems);
+        mAdapter = new FormatAdapter(mItems,mIndex);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -84,15 +88,19 @@ public class RecyclerEditFragment extends Fragment {
     }
 
     private void initDataset() {
-        mItems = new ArrayList<String>(DATASET_COUNT);
+        mItems = new ArrayList<sd>();
         for (int i = 0; i < DATASET_COUNT; i++) {
-            mItems.add(new String ("Spazio" ));
+            mItems.add(new sd (""+(i*2),""+(i*2+1)));
         }
     }
 
 
     public void addElementIn(){
-        mItems.add("Spazio");
+        mItems.add(new sd("1","2"));
         mAdapter.notifyItemInserted(mItems.size() - 1);
+    }
+
+    public void setIndex(int index) {
+        mIndex=index;
     }
 }

@@ -8,21 +8,29 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.R;
+import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 public class FormatSetting extends FragmentActivity {
 
     String state;
-
+    private Configuration mConfiguration;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         state="Encoder";
-        setContentView(R.layout.format_setting);
+        mConfiguration = BluetoothChatService.getInstance().getmConfiguration();
 
-        showEncoder();
+        setContentView(R.layout.format_setting);
+        if (mConfiguration.machineType==(Configuration.TYPE_ENCODER)) {
+            showEncoder();
+        }
+        else{
+            showTimer();
+        }
 
     }
     public void showEncoder(){

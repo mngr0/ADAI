@@ -19,26 +19,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:gravity="center_vertical">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Spazio"
-            app:layout_constraintBottom_toBottomOf="@+id/editText"
+            app:layout_constraintBottom_toBottomOf="@+id/spaceText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText" />
+            app:layout_constraintTop_toTopOf="@+id/spaceText" />
 
         <CheckBox
             android:id="@+id/checkBox6"
@@ -48,9 +47,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:text="dot"
-            app:layout_constraintBottom_toBottomOf="@+id/editText4"
+            app:layout_constraintBottom_toBottomOf="@+id/lineText"
             app:layout_constraintEnd_toStartOf="@+id/button13"
-            app:layout_constraintTop_toTopOf="@+id/editText4" />
+            app:layout_constraintTop_toTopOf="@+id/lineText" />
 
         <Button
             android:id="@+id/button13"
@@ -59,7 +58,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginTop="8dp"
             android:text="X"
-            app:layout_constraintBottom_toBottomOf="@+id/editText4"
+            app:layout_constraintBottom_toBottomOf="@+id/lineText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,14 +67,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
             android:text="tratto"
-            app:layout_constraintBottom_toBottomOf="@+id/editText4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText4" />
+            app:layout_constraintBottom_toBottomOf="@+id/lineText"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="@+id/lineText" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/lineText"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
@@ -85,17 +83,17 @@
             android:inputType="number"
             app:layout_constraintEnd_toStartOf="@+id/textView12"
             app:layout_constraintStart_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/editText" />
+            app:layout_constraintTop_toBottomOf="@+id/spaceText" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/spaceText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="number"
-            app:layout_constraintEnd_toEndOf="@+id/editText4"
+            app:layout_constraintEnd_toEndOf="@+id/lineText"
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -107,9 +105,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="ms"
-            app:layout_constraintBottom_toBottomOf="@+id/editText"
-            app:layout_constraintStart_toEndOf="@+id/editText"
-            app:layout_constraintTop_toTopOf="@+id/editText" />
+            app:layout_constraintBottom_toBottomOf="@+id/spaceText"
+            app:layout_constraintStart_toEndOf="@+id/spaceText"
+            app:layout_constraintTop_toTopOf="@+id/spaceText" />
 
         <TextView
             android:id="@+id/textView12"
@@ -119,8 +117,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:text="ms"
-            app:layout_constraintBottom_toBottomOf="@+id/editText4"
+            app:layout_constraintBottom_toBottomOf="@+id/lineText"
             app:layout_constraintEnd_toStartOf="@+id/checkBox6"
-            app:layout_constraintTop_toTopOf="@+id/editText4" />
+            app:layout_constraintTop_toTopOf="@+id/lineText" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

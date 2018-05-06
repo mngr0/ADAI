@@ -23,7 +23,8 @@
         <activity android:name=".settings.FormatSetting"/>
         <activity android:name=".FormatSelection"/>
         <activity android:name=".SendReport"/>
-        <activity android:name=".format_edit.FormatEdit"/>
+        <activity android:name=".format_edit.FormatEdit"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".QRActivity"/>
     </application>
 

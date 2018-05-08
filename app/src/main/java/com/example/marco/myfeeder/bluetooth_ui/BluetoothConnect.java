@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.marco.myfeeder.QRActivity;
 import com.example.marco.myfeeder.R;
 
+import java.util.Set;
 
 
 public class BluetoothConnect extends AppCompatActivity {
@@ -104,8 +105,27 @@ public class BluetoothConnect extends AppCompatActivity {
             Log.d("BT CNT", "cancelled");
         }
 
-        // Request discover from BluetoothAdapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Get a set of currently paired devices
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
         mFragment.reset();
+        // If there are paired devices, add each one to the ArrayAdapter
+        if (pairedDevices.size() > 0) {
+            //findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+            for (BluetoothDevice device : pairedDevices) {
+                Log.d("bt paired",device.toString());
+                BluetoothDevice tmpDevice = mBtAdapter.getRemoteDevice(device.toString());
+                Log.d("bt paired",device.getName());
+                Log.d("bt paired",device.getAddress());
+                Log.d("bt paired",""+(device==null));
+                mFragment.addElementIn(tmpDevice.getName() , tmpDevice.getAddress(), tmpDevice);
+            }
+        }
+
+
+        // Request discover from BluetoothAdapter
+
         mBtAdapter.startDiscovery();
         mStateBT.setText("searching");
         Log.d("BT CNT", "started");

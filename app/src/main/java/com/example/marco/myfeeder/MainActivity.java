@@ -1,22 +1,16 @@
 package com.example.marco.myfeeder;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.marco.myfeeder.ble.BluetoothChatService;
 import com.example.marco.myfeeder.bluetooth_ui.BluetoothConnect;
 import com.example.marco.myfeeder.settings.FormatSetting;
 
-
 public class MainActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

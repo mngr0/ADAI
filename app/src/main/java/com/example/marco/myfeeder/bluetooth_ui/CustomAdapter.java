@@ -72,6 +72,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public CustomAdapter() {
         mNames = new ArrayList<>();
         mAddresses = new ArrayList<>();
+        mDevices = new ArrayList<>();
     }
 
 
@@ -90,8 +91,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         viewHolder.setOnButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("BTC","connect"+mAddresses.get(position));
-                BluetoothChatService.getInstance().connect(mDevices.get(position),true);
+                Log.d("BTC", "connect" + mAddresses.get(position));
+                if (mDevices.get(position) != null) {
+                    BluetoothChatService.getInstance().connect(mDevices.get(position), true);
+                } else {
+
+                    Log.e("BTC", "device null");
+
+                }
             }
         });
 

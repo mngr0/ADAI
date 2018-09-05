@@ -9,19 +9,14 @@ public class Configuration {
         public boolean dotted[];
     }
 
-
-
+    public static final int size = 8;
     public static int active;//min 0, max 7
     public static Format formats[];
-    public static int machineType;// 1 or 2
-    public static final int TYPE_ENCODER = 1;
-    public static final int TYPE_TIMER = 2;
 
     static{
-        formats=new Format[10];
+        formats=new Format[size];
         active=3;
-        machineType=TYPE_ENCODER;
-        for(int i=0; i<10; i++){
+        for(int i=0; i<size; i++){
 
             formats[i]=new Format();
             formats[i].name= new String("Formato "+i);
@@ -33,6 +28,19 @@ public class Configuration {
         }
     }
 
+    public static String getName(int i){
+        return formats[i].name;
+    }
+
+    public static int getActive(){
+        return active;
+    }
+
+    public static void setActive(int i){
+        if((i<size)&&(i>=0)){
+            active=i;
+        }
+    }
 
 
 }

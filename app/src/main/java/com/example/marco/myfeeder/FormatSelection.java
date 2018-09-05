@@ -15,22 +15,21 @@ import com.example.marco.myfeeder.format_edit.FormatEdit;
 
 public class FormatSelection extends AppCompatActivity {
 
-    static final int size = 8;
-    private static View[] viewArray = new View[size];
-    private static Configuration mConfiguration;
+    private static View[] viewArray = new View[Configuration.size];
+
 
     public static void setRadio(int index, boolean check) {
-        if ((index == mConfiguration.active) && (!check)) {
+        if ((index == Configuration.getActive()) && (!check)) {
             return;
         }
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < Configuration.size; i++) {
             if (i != index) {
                 ((RadioButton) viewArray[i].findViewById(R.id.radioButton3)).setChecked(false);
             } else {
                 ((RadioButton) viewArray[i].findViewById(R.id.radioButton3)).setChecked(true);
             }
         }
-        mConfiguration.active = index;
+        Configuration.setActive(index);
     }
 
     public class ButtonListener implements View.OnClickListener {
@@ -47,7 +46,7 @@ public class FormatSelection extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Toast toast = Toast.makeText(mContext, "Element " + mIndex + " clicked.", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(mContext, "Editing " + Configuration.getName(mIndex), Toast.LENGTH_SHORT);
             toast.show();
             mParent.showFormatEdit(mIndex);
         }
@@ -85,12 +84,12 @@ public class FormatSelection extends AppCompatActivity {
         final Context t = getApplicationContext();
         setContentView(R.layout.activity_format_selection);
         LinearLayout list = (LinearLayout) findViewById(R.id.layoutConfList);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < Configuration.size; i++) {
             viewArray[i] = getLayoutInflater().inflate(R.layout.item_selection, null, false);
             list.addView(viewArray[i]);
             viewArray[i].findViewById(R.id.button19).setOnClickListener(new ButtonListener(i, t, this));
             viewArray[i].findViewById(R.id.radioButton3).setOnClickListener(new RadioListener(i, t));
-            ((TextView) viewArray[i].findViewById(R.id.nameText)).setText(Configuration.formats[i].name);
+            ((TextView) viewArray[i].findViewById(R.id.nameText)).setText(Configuration.getName(i));
         }
         // BluetoothChatService mBTC = BluetoothChatService.getInstance();
         // mConfiguration = BluetoothChatService.getInstance().getmConfiguration();

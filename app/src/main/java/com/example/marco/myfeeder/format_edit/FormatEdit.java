@@ -30,7 +30,6 @@ public class FormatEdit extends AppCompatActivity {
         Uri data = intent.getData();
         index=Integer.parseInt(data.toString());
         Log.d("test",data.toString());
-
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             mFragment = new RecyclerEditFragment();
@@ -40,15 +39,13 @@ public class FormatEdit extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
     }
 
-
     public void addElement(View view){
-        mFragment.addElementIn();
+        mFragment.addElementTail();
     }
 
 
@@ -64,11 +61,7 @@ public class FormatEdit extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                //Log.d("DIALOG", input.getText().toString());
-                //save everything
-
                 Configuration.setTimes(index,mFragment.getTimes());
-                //Log.d("DIALOG",mFragment.getTimes().length+"");
                 Configuration.setName(index, input.getText().toString());
                 Intent result = new Intent();
                 result.putExtra("index",index);
@@ -84,7 +77,5 @@ public class FormatEdit extends AppCompatActivity {
         });
 
         builder.show();
-
     }
-
 }

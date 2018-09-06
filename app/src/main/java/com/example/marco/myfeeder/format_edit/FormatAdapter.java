@@ -15,8 +15,10 @@ import java.util.ArrayList;
 /*
 Format Adapter
 
-each item_schedule_element View host a remove button, linked to a RemoveListener
-on onBindViewHolder each remove button is linked to 
+each item_schedule_element View hosts a remove button, linked to a RemoveListener
+on onBindViewHolder each remove button is linked to a RemoveListener that removes the host View
+
+The Format Adapter manage adding and removing elements
 
  */
 
@@ -94,7 +96,7 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         int[] u= Configuration.getTimes(index);
         int len= u.length/2;
         for (int i=0; i<len;i++){
-            add(u[i*2],u[i*2+1]);
+            addItem(u[i*2],u[i*2+1]);
         }
     }
 
@@ -117,12 +119,8 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         return mItems.size();
     }
 
-    public void add(int a,int b){
+    public void addItem(int a, int b){
         mItems.add(new SpaceTime(a+"",b+""));
-    }
-
-    public int numElem(){
-        return mItems.size();
     }
 
 }

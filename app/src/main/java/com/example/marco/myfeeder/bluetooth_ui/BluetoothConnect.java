@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.util.Log;
-import android.widget.Toast;
-
 
 import com.example.marco.myfeeder.QRActivity;
 import com.example.marco.myfeeder.R;

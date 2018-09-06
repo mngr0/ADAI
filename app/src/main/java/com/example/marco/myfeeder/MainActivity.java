@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     public void sendTest(View view) {
         byte[] temp = {0x42, 0x43, 0x44, 0x45};
         BluetoothChatService.getInstance().write(temp);
-
     }
 
     public void sendReport(View view) {

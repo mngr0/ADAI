@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.BLUETOOTH_ADMIN},REQUEST_GRANTED);
         }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-                == PackageManager.PERMISSION_GRANTED) {
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+                == PackageManager.PERMISSION_GRANTED)&&(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
+                == PackageManager.PERMISSION_GRANTED)) {
             Intent intent = new Intent(this, BluetoothConnect.class);
             startActivity(intent);
-
         }
 
     }

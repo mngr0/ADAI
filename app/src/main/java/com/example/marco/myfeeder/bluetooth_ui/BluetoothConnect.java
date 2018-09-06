@@ -1,5 +1,6 @@
 package com.example.marco.myfeeder.bluetooth_ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,8 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -69,11 +73,13 @@ public class BluetoothConnect extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("oAR",data.toString());
-        String x=data.getData().toString();
-        Log.d("oAR",x);
-        mStateQR.setText(x);
 
+        if(data!=null) {
+            Log.d("oAR",data.toString());
+            String x = data.getData().toString();
+            Log.d("oAR", x);
+            mStateQR.setText(x);
+        }
     }
 
     public void search(View view) {
@@ -146,14 +152,22 @@ public class BluetoothConnect extends AppCompatActivity {
         this.unregisterReceiver(mReceiver);
     }
 
+    public static final int REQUEST_GRANTED = 1;
 
     public void qr(View view) {
         Log.d("BT QR", "qr called");
         //activate qr rec, try to connect, and send error if unable to
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},REQUEST_GRANTED);
 
-        Intent intent = new Intent(this, QRActivity.class);
-        Log.d("BT QR", "intent created");
-        startActivityForResult(intent, 43);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED){
+            Intent intent = new Intent(this, QRActivity.class);
+            Log.d("BT QR", "intent created");
+            startActivityForResult(intent, 43);
+        }
     }
 
 

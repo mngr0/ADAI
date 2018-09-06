@@ -58,7 +58,6 @@ public class Configuration {
             last++;
         }
         return Arrays.copyOfRange(formats[index].times,0,last);
-        //return formats[index].times;
     }
 
     public static void setTimes(int index, int[] times) {

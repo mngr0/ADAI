@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Configuration {
 
 
-    public static class Format{
+    private static class Format{
         public String name;//max 16 chars
         public int times[];
     }
@@ -32,6 +32,11 @@ public class Configuration {
 
         }
     }
+
+    private void update(){
+        //TODO send via bt
+    }
+
 
     public static String getName(int i){
         return formats[i].name;

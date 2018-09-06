@@ -41,11 +41,6 @@ public class BluetoothChatService {
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
 
     private static BluetoothChatService instance;
-    private Configuration mConfiguration;
-
-    public Configuration getmConfiguration(){
-        return mConfiguration;
-    }
 
     public static BluetoothChatService createInstance(Handler handler) {
         if (instance == null) {

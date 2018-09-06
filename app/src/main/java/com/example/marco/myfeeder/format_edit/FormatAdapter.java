@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.marco.myfeeder.format_edit;
 
 import android.support.v7.widget.RecyclerView;
@@ -22,36 +6,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.R;
 
 import java.util.ArrayList;
 
+/*
+Format Adapter
+
+each item_schedule_element View host a remove button, linked to a RemoveListener
+on onBindViewHolder each remove button is linked to 
+
+ */
+
+
+
 
 public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
 
-    private class space_time{
+    private class SpaceTime {
         String space;
         String time;
-        space_time(String mspace, String mtime){
+        SpaceTime(String mspace, String mtime){
             space =mspace;
             time =mtime;
         }
     }
 
-    private ArrayList<space_time> mItems;
-    private ArrayList<EditText> mEditTexts;
-    //private int mIndex;
+    private ArrayList<SpaceTime> mItems;
 
     class RemoveListener implements View.OnClickListener {
 
-        private ArrayList<space_time> mItems;
+        private ArrayList<SpaceTime> mItems;
         private int mIndex;
         private FormatAdapter mAdapter;
 
-        private RemoveListener(FormatAdapter adapter, ArrayList<space_time> items, int index) {
+        private RemoveListener(FormatAdapter adapter, ArrayList<SpaceTime> items, int index) {
             mItems = items;
             mIndex = index;
             mAdapter = adapter;
@@ -66,14 +57,12 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textView;
         private final Button button;
         private final EditText spaceText;
         private final EditText lineText;
 
         private ViewHolder(View v) {
             super(v);
-            textView = v.findViewById(R.id.textView6);
             button = v.findViewById(R.id.button13);
             spaceText = v.findViewById(R.id.spaceText);
             lineText = v.findViewById(R.id.lineText);
@@ -101,7 +90,6 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     }
 
     public FormatAdapter( int index) {
-        //mIndex=index;
         mItems=new ArrayList<>();
         int[] u= Configuration.getTimes(index);
         int len= u.length/2;
@@ -119,11 +107,9 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        //viewHolder.getTextView().setText(mItems.get(position).space);
         viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems, position));
         viewHolder.setSpaceText(mItems.get(position).space);
         viewHolder.setLineText(mItems.get(position).time);
-
     }
 
     @Override
@@ -132,7 +118,7 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     }
 
     public void add(int a,int b){
-        mItems.add(new space_time(a+"",b+""));
+        mItems.add(new SpaceTime(a+"",b+""));
     }
 
     public int numElem(){

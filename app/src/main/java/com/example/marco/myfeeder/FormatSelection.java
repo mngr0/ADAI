@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -50,14 +51,15 @@ public class FormatSelection extends AppCompatActivity {
             toast.show();
             mParent.showFormatEdit(mIndex);
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast toast = Toast.makeText(getApplicationContext(), "BAAACK!", Toast.LENGTH_SHORT);
+        Bundle bundle = data.getExtras();
+        int val= Integer.parseInt(bundle.get("index").toString());
+        Toast toast = Toast.makeText(getApplicationContext(), "DONE!" + val, Toast.LENGTH_SHORT);
         toast.show();
-
+        ((TextView)viewArray[val].findViewById(R.id.nameText)).setText(Configuration.getName(val));
     }
 
     public static class RadioListener implements View.OnClickListener {
@@ -104,7 +106,7 @@ public class FormatSelection extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setRadio(Configuration.active, true);
+        setRadio(Configuration.getActive(), true);
     }
 
     public void showFormatEdit(int index) {

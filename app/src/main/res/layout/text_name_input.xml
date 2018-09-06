@@ -18,9 +18,9 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:hint="name"
             android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:inputType="text"
+            android:maxLength="32"/>
 
     </android.support.design.widget.TextInputLayout>
 </FrameLayout>

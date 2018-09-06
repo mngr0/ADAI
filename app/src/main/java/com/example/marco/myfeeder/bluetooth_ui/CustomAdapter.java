@@ -47,7 +47,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         private final TextView mTextAddress;
         private final Button mButtonConnect;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             mTextName = (TextView) v.findViewById(R.id.textBTName);
             mTextAddress = (TextView) v.findViewById(R.id.textBTAddress);
@@ -58,11 +58,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             mTextName.setText(name);
         }
 
-        public void setAddress(String name) {
+        private void setAddress(String name) {
             mTextAddress.setText(name);
         }
 
-        public void setOnButtonClickListener(View.OnClickListener listener) {
+        private void setOnButtonClickListener(View.OnClickListener listener) {
             mButtonConnect.setOnClickListener(listener);
         }
 

@@ -21,37 +21,33 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.R;
 
 import java.util.ArrayList;
 
 /**
- * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
+ * Demonstrates the use of {@link RecyclerView} with space {@link LinearLayoutManager} and space
  * {@link GridLayoutManager}.
  */
 public class RecyclerEditFragment extends Fragment {
 
-
-
     private static final String TAG = "RecyclerViewFragment";
-    private static final int DATASET_COUNT = 4;
-
 
     protected RecyclerView mRecyclerView;
     protected FormatAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    ArrayList<sd> mItems;
     private int mIndex;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataset();
     }
 
     @Override
@@ -62,7 +58,7 @@ public class RecyclerEditFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView3);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-        mAdapter = new FormatAdapter(mItems,mIndex);
+        mAdapter = new FormatAdapter(mIndex);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -70,7 +66,7 @@ public class RecyclerEditFragment extends Fragment {
     public void setRecyclerViewLayoutManager() {
         int scrollPosition = 0;
 
-        // If a layout manager has already been set, get current scroll position.
+        // If space layout manager has already been set, get current scroll position.
         if (mRecyclerView.getLayoutManager() != null) {
             scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();
@@ -87,17 +83,20 @@ public class RecyclerEditFragment extends Fragment {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    private void initDataset() {
-        mItems = new ArrayList<sd>();
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            mItems.add(new sd (""+(i*2),""+(i*2+1)));
+
+    public int[] getTimes() {
+
+        int[] val= new int[mLayoutManager.getItemCount()*2];
+        for (int i=0;i<mLayoutManager.getItemCount();i++){
+            val[i*2]=Integer.parseInt(((EditText)mLayoutManager.getChildAt(i).findViewById(R.id.spaceText)).getText().toString());
+            val[i*2+1]=Integer.parseInt(((EditText)mLayoutManager.getChildAt(i).findViewById(R.id.lineText)).getText().toString());
         }
+        return val;
     }
 
-
     public void addElementIn(){
-        mItems.add(new sd("1","2"));
-        mAdapter.notifyItemInserted(mItems.size() - 1);
+        mAdapter.add(50,100);
+        mAdapter.notifyItemInserted(mAdapter.numElem() - 1);
     }
 
     public void setIndex(int index) {

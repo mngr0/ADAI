@@ -16,38 +16,42 @@
 
 package com.example.marco.myfeeder.format_edit;
 
-import android.content.Context;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.R;
-import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 import java.util.ArrayList;
 
 
 public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
-    private static final String TAG = "FormatAdapter";
 
-    private ArrayList<sd> mItems;
-    private int mIndex;
+    private class space_time{
+        String space;
+        String time;
+        space_time(String mspace, String mtime){
+            space =mspace;
+            time =mtime;
+        }
+    }
+
+    private ArrayList<space_time> mItems;
+    private ArrayList<EditText> mEditTexts;
+    //private int mIndex;
 
     class RemoveListener implements View.OnClickListener {
 
-        private ArrayList<sd> mItems;
+        private ArrayList<space_time> mItems;
         private int mIndex;
         private FormatAdapter mAdapter;
 
-        public RemoveListener(FormatAdapter adapter, ArrayList<sd> items, int index) {
+        private RemoveListener(FormatAdapter adapter, ArrayList<space_time> items, int index) {
             mItems = items;
             mIndex = index;
             mAdapter = adapter;
@@ -57,7 +61,6 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         public void onClick(View v) {
             mItems.remove(mIndex);
             mAdapter.notifyDataSetChanged();
-
         }
     }
 
@@ -68,17 +71,12 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         private final EditText spaceText;
         private final EditText lineText;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
-            final Context t = v.getContext();
             textView = v.findViewById(R.id.textView6);
             button = v.findViewById(R.id.button13);
             spaceText = v.findViewById(R.id.spaceText);
             lineText = v.findViewById(R.id.lineText);
-        }
-
-        public TextView getTextView() {
-            return textView;
         }
 
         public Button getButton() {
@@ -92,11 +90,24 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
         public void setLineText(String text){
             lineText.setText(text);
         }
+
+        public EditText getLineText() {
+            return lineText;
+        }
+
+        public EditText getSpaceText() {
+            return spaceText;
+        }
     }
 
-    public FormatAdapter(ArrayList<sd> items,int index) {
-        mItems = items;
-        mIndex=index;
+    public FormatAdapter( int index) {
+        //mIndex=index;
+        mItems=new ArrayList<>();
+        int[] u= Configuration.getTimes(index);
+        int len= u.length/2;
+        for (int i=0; i<len;i++){
+            add(u[i*2],u[i*2+1]);
+        }
     }
 
     @Override
@@ -108,15 +119,24 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Log.d(TAG, "Element " + position + " set.");
-        //viewHolder.getTextView().setText(mItems.get(position).a);
+        //viewHolder.getTextView().setText(mItems.get(position).space);
         viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems, position));
-        viewHolder.setSpaceText(mItems.get(position).a);
-        viewHolder.setLineText(mItems.get(position).b);
+        viewHolder.setSpaceText(mItems.get(position).space);
+        viewHolder.setLineText(mItems.get(position).time);
+
     }
 
     @Override
     public int getItemCount() {
         return mItems.size();
     }
+
+    public void add(int a,int b){
+        mItems.add(new space_time(a+"",b+""));
+    }
+
+    public int numElem(){
+        return mItems.size();
+    }
+
 }

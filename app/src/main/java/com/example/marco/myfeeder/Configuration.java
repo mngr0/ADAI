@@ -1,17 +1,19 @@
 package com.example.marco.myfeeder;
 
+import java.util.Arrays;
+
 public class Configuration {
+
+
     public static class Format{
         public String name;//max 16 chars
-        public int overtime;
-        public int undertime;
         public int times[];
-        public boolean dotted[];
     }
-
     public static final int size = 8;
-    public static int active;//min 0, max 7
-    public static Format formats[];
+    public static final int length = 32;
+
+    private static int active;//min 0, max 7
+    private static Format formats[];
 
     static{
         formats=new Format[size];
@@ -19,10 +21,13 @@ public class Configuration {
         for(int i=0; i<size; i++){
 
             formats[i]=new Format();
-            formats[i].name= new String("Formato "+i);
-            formats[i].times= new int[12];
-            for (int j=0;j<12; j++){
-                formats[i].times[j]=j;
+            formats[i].name= "Formato "+i;
+            formats[i].times= new int[length];
+            for (int j=0;j<2; j++){
+                formats[i].times[j]=1;
+            }
+            for (int j=2;j<length; j++){
+                formats[i].times[j]=-1;
             }
 
         }
@@ -42,5 +47,32 @@ public class Configuration {
         }
     }
 
+    public static void setName(int index,String s) {
+        //check len < 16
+        formats[index].name=s;
+    }
+
+    public static  int[] getTimes(int index){
+        int last=0;
+        while((formats[index].times[last]!=-1)&&(last<length-1)){
+            last++;
+        }
+        return Arrays.copyOfRange(formats[index].times,0,last);
+        //return formats[index].times;
+    }
+
+    public static void setTimes(int index, int[] times) {
+        //Log.d("CONF","");
+        for(int i=0; i<length;i++){
+            if(i<times.length){
+                formats[index].times[i]=times[i];
+            }else{
+                formats[index].times[i]=-1;
+            }
+        }
+    }
+
+
+    private Configuration(){}
 
 }

@@ -14,7 +14,6 @@ import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 import java.util.ArrayList;
 
-
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private static final String TAG = "CustomAdapter";
@@ -38,16 +37,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public void setName(String name) {
             mTextName.setText(name);
         }
-
         private void setAddress(String name) {
             mTextAddress.setText(name);
         }
-
         private void setOnButtonClickListener(View.OnClickListener listener) {
             mButtonConnect.setOnClickListener(listener);
         }
-
-
     }
 
     public CustomAdapter() {
@@ -76,14 +71,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 if (mDevices.get(position) != null) {
                     BluetoothChatService.getInstance().connect(mDevices.get(position), true);
                 } else {
-
                     Log.e("BTC", "device null");
-
                 }
             }
         });
-
-
     }
 
     @Override
@@ -96,6 +87,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         mAddresses.add(address);
         mDevices.add(mDevice);
         notifyItemInserted(mNames.size() - 1);
+    }
+
+    public boolean isListed(BluetoothDevice bd){
+        return mDevices.contains(bd);
+    }
+
+    public void connectToAddress(String address){
+        int position = mAddresses.indexOf(address);
+        if(position > -1) {
+            BluetoothChatService.getInstance().connect(mDevices.get(position), true);
+            Log.d("CSTM-ADAP","connecting");
+        }else{
+            Log.d("CSTM-ADAP","address not found");
+        }
     }
 
     public void clear() {

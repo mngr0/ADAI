@@ -32,6 +32,7 @@ public class SendReport extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             Log.d("data", data.getData().toString());
             String filepath =  getImageRealPath(getContentResolver(), data.getData(), null);
+            //TODO receive LOG
             PostImage pi= new PostImage(filepath);
             pi.execute();
         }

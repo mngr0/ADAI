@@ -18,7 +18,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.QRActivity;
 import com.example.marco.myfeeder.R;
 
@@ -82,22 +84,18 @@ public class BluetoothConnect extends AppCompatActivity {
 
     public void search(View view) {
         //populate list in RecyclerviewFragment fragment
-        Log.d("BT CNT", "searching...");
 
         if (mBtAdapter == null) {
 
-            Log.d("BT CNT", "bt not found");
+            Toast toast = Toast.makeText(this, "bluetooth not found on this device", Toast.LENGTH_LONG);
+            toast.show();
         }
 
 
         if (!mBtAdapter.isEnabled()) {
             mBtAdapter.enable();
-            /*
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            mBluetoothStatus.setText("Bluetooth enabled");
-            */
-            mStateBT.setText("BT enabled");
+            Toast toast = Toast.makeText(this, "bluetooth enabled", Toast.LENGTH_SHORT);
+            toast.show();
             Log.d("BT CNT", "enabled");
         }
 
@@ -131,6 +129,8 @@ public class BluetoothConnect extends AppCompatActivity {
         // Request discover from BluetoothAdapter
 
         mBtAdapter.startDiscovery();
+        Toast toast1 = Toast.makeText(this, "bluetooth searching", Toast.LENGTH_SHORT);
+        toast1.show();
         mStateBT.setText("searching");
         Log.d("BT CNT", "started");
 
@@ -208,10 +208,10 @@ public class BluetoothConnect extends AppCompatActivity {
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d("BT CNT", "end");
-
-                setProgressBarIndeterminateVisibility(false);
+                Toast toast = Toast.makeText(context, "bluetooth search completed", Toast.LENGTH_SHORT);
+                toast.show();
+                mStateBT.setText("search completed");
                 if ((mFragment.getItemCount() == 0 )&& (!mBtAdapter.isDiscovering())) {
-                    mStateBT.setText("search completed");
                     //  String noDevices = getResources().getText(R.string.none_found).toString();
                     //  mNewDevicesArrayAdapter.add(noDevices);
                     mFragment.addElementIn("nothing found","", null);

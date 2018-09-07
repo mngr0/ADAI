@@ -64,7 +64,8 @@ public class RecyclerViewFragment extends Fragment {
 
 
     public void addElementIn(String name, String address, BluetoothDevice device){
-        mAdapter.addElement(name,address,device);
+        if(!mAdapter.isListed(device))
+            mAdapter.addElement(name,address,device);
     }
 
     public int getItemCount(){

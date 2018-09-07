@@ -21,11 +21,6 @@ public class BluetoothChatService {
     // Debugging
     private static final String TAG = "BluetoothChatService";
 
-    // Unique UUID for this application
-    private static final UUID MY_UUID_SECURE =
-            UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
     private static final UUID SerialPortServiceClass_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     // Member fields
     private final BluetoothAdapter mAdapter;
@@ -36,22 +31,15 @@ public class BluetoothChatService {
     private int mNewState;
 
     // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 2;  // now connected to a remote device
+    private static final int STATE_NONE = 0;       // we're doing nothing
+    private static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
+    private static final int STATE_CONNECTED = 2;  // now connected to a remote device
 
     private static BluetoothChatService instance;
 
-    public static BluetoothChatService createInstance(Handler handler) {
-        if (instance == null) {
-            instance = new BluetoothChatService(handler);
-        }
-        return instance;
-    }
-
     public static BluetoothChatService getInstance() {
         if (instance == null) {
-            instance = new BluetoothChatService(mmHandler);
+            instance = new BluetoothChatService(Configuration.getHandler());
         }
         return instance;
     }
@@ -67,15 +55,11 @@ public class BluetoothChatService {
         return mState == STATE_CONNECTED;
     }
 
-
     private synchronized void updateUserInterfaceTitle() {
-
         mState = getState();
         Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
         mNewState = mState;
 
-        // Give the new state to the Handler so the UI Activity can update
-        // mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
     }
 
 
@@ -86,24 +70,21 @@ public class BluetoothChatService {
 
     public synchronized void start() {
         Log.d(TAG, "start");
-
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-
         updateUserInterfaceTitle();
     }
 
 
-    public synchronized void connect(BluetoothDevice device, boolean secure) {
+    public synchronized void connect(BluetoothDevice device) {
         Log.d(TAG, "connect to: " + device);
 
         // Cancel any thread attempting to make a connection
@@ -121,16 +102,15 @@ public class BluetoothChatService {
         }
 
         // Start the thread to connect with the given device
-        mConnectThread = new ConnectThread(device, secure);
+        mConnectThread = new ConnectThread(device);
         mConnectThread.start();
         // Update UI title
         updateUserInterfaceTitle();
     }
 
 
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device, final String socketType) {
-        Log.d(TAG, "connected, Socket Type:" + socketType);
+    public synchronized void connected(BluetoothSocket socket ) {
+        Log.d(TAG, "connected, Socket Type: SerialPortServiceClass_UUID");
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
@@ -145,16 +125,11 @@ public class BluetoothChatService {
         }
 
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket, socketType);
+        mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
-
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.DEVICE_NAME, device.getName());
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-        // Update UI title
+        //TODO init
+
         updateUserInterfaceTitle();
     }
 
@@ -193,11 +168,6 @@ public class BluetoothChatService {
     private void connectionFailed() {
         Log.d(TAG, "connection failed");
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Unable to connect device");
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
         // Update UI title
@@ -211,11 +181,6 @@ public class BluetoothChatService {
     private void connectionLost() {
         Log.d(TAG, "connection lost");
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
         // Update UI title
@@ -227,41 +192,25 @@ public class BluetoothChatService {
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-        private String mSocketType;
 
-        public ConnectThread(BluetoothDevice device, boolean secure) {
-            mmDevice = device;
+        public ConnectThread(BluetoothDevice device ) {
+
             BluetoothSocket tmp = null;
-            mSocketType = secure ? "Secure" : "Insecure";
 
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-
-                if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(
-                            SerialPortServiceClass_UUID);
-
-                    //Method method;
-
-//            		method = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class } );
-                    //                  tmp = (BluetoothSocket) method.invoke(device, 1);
-
-                } else {
-                    tmp = device.createRfcommSocketToServiceRecord(MY_UUID_INSECURE);
-                }
+                tmp = device.createRfcommSocketToServiceRecord(SerialPortServiceClass_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
+                Log.e(TAG, "Socket Type: SerialPortServiceClass_UUID create() failed", e);
             }
-
             mmSocket = tmp;
             mState = STATE_CONNECTING;
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
-            setName("ConnectThread" + mSocketType);
+            Log.i(TAG, "BEGIN mConnectThread SocketType: SerialPortServiceClass_UUID" );
+            setName("ConnectThread SerialPortServiceClass_UUID" );
 
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
@@ -277,8 +226,7 @@ public class BluetoothChatService {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " + mSocketType +
-                            " socket during connection failure", e2);
+                    Log.e(TAG, "unable to close() SerialPortServiceClass_UUID socket during connection failure", e2);
                 }
                 connectionFailed();
                 return;
@@ -290,14 +238,14 @@ public class BluetoothChatService {
             }
 
             // Start the connected thread
-            connected(mmSocket, mmDevice, mSocketType);
+            connected(mmSocket);
         }
 
         public void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
+                Log.e(TAG, "close() of connect SerialPortServiceClass_UUID socket failed", e);
             }
         }
     }
@@ -308,8 +256,8 @@ public class BluetoothChatService {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            Log.d(TAG, "create ConnectedThread: " + socketType);
+        public ConnectedThread(BluetoothSocket socket) {
+            Log.d(TAG, "create ConnectedThread: SerialPortServiceClass_UUID");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -339,7 +287,6 @@ public class BluetoothChatService {
                     //try
                     bytes = mmInStream.read(buffer);
                     //read setted value
-
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
@@ -372,20 +319,6 @@ public class BluetoothChatService {
             }
         }
     }
-
-    @SuppressLint("HandlerLeak")
-    private static final Handler mmHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d("handler", msg.toString());
-            byte[] readBuf = (byte[]) msg.obj;
-            // construct a string from the valid bytes in the buffer
-            String readMessage = "null";
-            if((readBuf!= null)&&(msg.arg1>0))
-                readMessage = new String(readBuf, 0, msg.arg1);
-            Log.d("handler", readMessage);
-        }
-    };
 
 }
 

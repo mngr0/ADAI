@@ -1,17 +1,25 @@
 package com.example.marco.myfeeder;
 
+import android.annotation.SuppressLint;
+import android.os.Message;
+import android.util.Log;
+import android.os.Handler;
+
+import com.example.marco.myfeeder.ble.BluetoothChatService;
+import com.example.marco.myfeeder.ble.Constants;
+
 import java.util.Arrays;
 
 public class Configuration {
 
-
+    private static BluetoothChatService mBCS;
     private static class Format{
         public String name;//max 16 chars
         public int times[];
     }
     public static final int size = 8;
     public static final int length = 32;
-
+    private String log;
     private static int active;//min 0, max 7
     private static Format formats[];
 
@@ -32,9 +40,80 @@ public class Configuration {
 
         }
     }
+    public static void init(String received){
+        deserialize(received);
+    }
 
-    private void update(){
-        //TODO send via bt
+
+
+    private static String serialize(){
+        String ser="";
+        ser+=active;
+        for (int i=0; i<size; i++){
+            ser+="#";
+            ser+=formats[i].name;
+            for (int j=0;j<length;j++){
+                ser+=";";
+                ser+=formats[i].times[j];
+            }
+
+        }
+        return ser;
+    }
+
+
+
+    @SuppressLint("HandlerLeak")
+    private static final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.what == Constants.MESSAGE_READ){
+                    byte[] readBuf = (byte[]) msg.obj;
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    String [] recv = readMessage.split("/");
+                    if(recv[0].equals("init")){
+                        deserialize(recv[1]);
+                    }
+            }
+        }
+    };
+
+    public static Handler getHandler(){
+        return mHandler;
+    }
+
+
+    public static String readLog(){
+        mBCS= BluetoothChatService.getInstance();
+        if(mBCS.isConnected()){
+            mBCS.write("logrequest".getBytes());
+            //mBCS.read();
+        }else{
+            Log.d("Conf","unable to connect");
+        }
+        return "";
+    }
+
+    private static void deserialize(String received){
+        String pieces [] = received.split("#");
+        active= Integer.parseInt(pieces[0]);
+        for (int i=0; i<size; i++){
+            String [] parts = pieces[i].split(";");
+            formats[i].name= parts[0];
+            for (int j=0;j<length;j++){
+                formats[i].times[j]=Integer.parseInt(parts[j]);
+            }
+        }
+    }
+
+    private static void update(){
+        mBCS= BluetoothChatService.getInstance();
+        if(mBCS.isConnected()){
+            mBCS.write(serialize().getBytes());
+        }else{
+            Log.d("Conf","unable to connect");
+        }
     }
 
 
@@ -49,12 +128,14 @@ public class Configuration {
     public static void setActive(int i){
         if((i<size)&&(i>=0)){
             active=i;
+            update();
         }
     }
 
     public static void setName(int index,String s) {
         //check len < 16
         formats[index].name=s;
+        update();
     }
 
     public static  int[] getTimes(int index){

@@ -69,7 +69,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             public void onClick(View v) {
                 Log.d("BTC", "connect" + mAddresses.get(position));
                 if (mDevices.get(position) != null) {
-                    BluetoothChatService.getInstance().connect(mDevices.get(position), true);
+                    BluetoothChatService.getInstance().connect(mDevices.get(position));
                 } else {
                     Log.e("BTC", "device null");
                 }
@@ -96,7 +96,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void connectToAddress(String address){
         int position = mAddresses.indexOf(address);
         if(position > -1) {
-            BluetoothChatService.getInstance().connect(mDevices.get(position), true);
+            BluetoothChatService.getInstance().connect(mDevices.get(position));
             Log.d("CSTM-ADAP","connecting");
         }else{
             Log.d("CSTM-ADAP","address not found");

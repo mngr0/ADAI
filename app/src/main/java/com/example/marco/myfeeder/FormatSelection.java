@@ -53,11 +53,13 @@ public class FormatSelection extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
-        int val= Integer.parseInt(bundle.get("index").toString());
-        Toast toast = Toast.makeText(getApplicationContext(), "DONE!" + val, Toast.LENGTH_SHORT);
-        toast.show();
-        ((TextView)viewArray[val].findViewById(R.id.nameText)).setText(Configuration.getName(val));
+        if(data!=null) {
+            Bundle bundle = data.getExtras();
+            int val = Integer.parseInt(bundle.get("index").toString());
+            Toast toast = Toast.makeText(getApplicationContext(), Configuration.getName(val)+" edited", Toast.LENGTH_SHORT);
+            toast.show();
+            ((TextView) viewArray[val].findViewById(R.id.nameText)).setText(Configuration.getName(val));
+        }
     }
 
     public static class RadioListener implements View.OnClickListener {
@@ -72,7 +74,7 @@ public class FormatSelection extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Toast toast = Toast.makeText(mContext, "Element " + mIndex + " clicked.", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(mContext, Configuration.getName(mIndex) + " activated", Toast.LENGTH_SHORT);
             toast.show();
             FormatSelection.setRadio(mIndex, false);
         }
@@ -100,10 +102,8 @@ public class FormatSelection extends AppCompatActivity {
     }
 
     public void showFormatEdit(int index) {
-        Toast toast = Toast.makeText(getApplicationContext(), "go format_setting!", Toast.LENGTH_SHORT);
-        toast.show();
         Intent intent = new Intent(this, FormatEdit.class);
         intent.setData(Uri.parse(index + ""));
-        startActivityForResult(intent, 42);
+        startActivityForResult(intent, 1);
     }
 }

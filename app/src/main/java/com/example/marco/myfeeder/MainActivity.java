@@ -51,16 +51,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    public void sendTest(View view) {
-        byte[] temp = {0x42, 0x43, 0x44, 0x45};
-        BluetoothChatService.getInstance().write(temp);
-    }
-
     public void sendReport(View view) {
         Intent intent = new Intent(this, SendReport.class);
         startActivity(intent);
         Log.d("SR", "going sr");
     }
+
+
 
 }

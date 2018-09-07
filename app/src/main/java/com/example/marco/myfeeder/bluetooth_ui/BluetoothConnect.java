@@ -74,11 +74,14 @@ public class BluetoothConnect extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(data!=null) {
-            Log.d("oAR",data.toString());
-            String x = data.getData().toString();
-            Log.d("oAR", x);
-            mStateQR.setText(x);
+            Log.d("onActivityResult",data.toString());
+            String address = data.getData().toString();
+
+            Log.d("onActivityResult", address);
+            mStateQR.setText("connecting to "+address);
             //TODO connect to that macaddress
+            mFragment.connectToAddress(address);
+
         }
     }
 

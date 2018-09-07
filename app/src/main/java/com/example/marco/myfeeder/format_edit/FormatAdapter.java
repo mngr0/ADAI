@@ -1,6 +1,9 @@
 package com.example.marco.myfeeder.format_edit;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,28 +26,26 @@ The Format Adapter manage adding and removing elements
  */
 
 
-
-
 public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
 
-    private class SpaceTime {
+    private class SpaceLine {
         String space;
-        String time;
-        SpaceTime(String mspace, String mtime){
+        String line;
+        SpaceLine(String mspace, String mline){
             space =mspace;
-            time =mtime;
+            line =mline;
         }
     }
 
-    private ArrayList<SpaceTime> mItems;
+    private ArrayList<SpaceLine> mItems;
 
     class RemoveListener implements View.OnClickListener {
 
-        private ArrayList<SpaceTime> mItems;
+        private ArrayList<SpaceLine> mItems;
         private int mIndex;
         private FormatAdapter mAdapter;
 
-        private RemoveListener(FormatAdapter adapter, ArrayList<SpaceTime> items, int index) {
+        private RemoveListener(FormatAdapter adapter, ArrayList<SpaceLine> items, int index) {
             mItems = items;
             mIndex = index;
             mAdapter = adapter;
@@ -56,6 +57,33 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
             mAdapter.notifyDataSetChanged();
         }
     }
+    private class EditListener implements TextWatcher {
+        private ArrayList<SpaceLine> mItems;
+        private int mIndex;
+        String mKind;
+        private EditListener(ArrayList<SpaceLine> items, int index,String kind) {
+            mItems = items;
+            mIndex = index;
+            mKind=kind;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(mKind.equals("line")){
+                mItems.get(mIndex).line=s.toString();
+            }else{
+                mItems.get(mIndex).space=s.toString();
+            }
+            Log.d("textwatcher","edited" + s.toString());
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        @Override
+        public void afterTextChanged(Editable s) {}
+    }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -110,17 +138,38 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems, position));
+        viewHolder.getLineText().addTextChangedListener(new EditListener(mItems,position,"line"));
+        viewHolder.getSpaceText().addTextChangedListener(new EditListener(mItems,position,"space"));
         viewHolder.setSpaceText(mItems.get(position).space);
-        viewHolder.setLineText(mItems.get(position).time);
+        viewHolder.setLineText(mItems.get(position).line);
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        if(mItems==null){
+            return 0;
+        }
+        else {
+            return mItems.size();
+        }
     }
 
     public void addItem(int a, int b){
-        mItems.add(new SpaceTime(a+"",b+""));
+        mItems.add(new SpaceLine(a+"",b+""));
     }
+
+    public int[] getTimes() {
+        //mLayoutManager = getActivity().findViewById()
+
+        //Log.d("getTimes",""+mLayoutManager.getItemCount());
+        int[] val= new int[mItems.size()*2];
+        for (int i=0;i<mItems.size();i++){
+            Log.d("getTimes",""+i);
+            val[i*2]=Integer.parseInt(mItems.get(i).space);
+            val[i*2+1]=Integer.parseInt(mItems.get(i).line);
+        }
+        return val;
+    }
+
 
 }

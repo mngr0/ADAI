@@ -1,12 +1,10 @@
 package com.example.marco.myfeeder.ble;
 
-import android.annotation.SuppressLint;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.example.marco.myfeeder.Configuration;
@@ -55,18 +53,10 @@ public class BluetoothChatService {
         return mState == STATE_CONNECTED;
     }
 
-    private synchronized void updateUserInterfaceTitle() {
-        mState = getState();
+    private synchronized void logStateChange() {
         Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
         mNewState = mState;
-
     }
-
-
-    public synchronized int getState() {
-        return mState;
-    }
-
 
     public synchronized void start() {
         Log.d(TAG, "start");
@@ -80,7 +70,7 @@ public class BluetoothChatService {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-        updateUserInterfaceTitle();
+        logStateChange();
     }
 
 
@@ -104,8 +94,7 @@ public class BluetoothChatService {
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
-        // Update UI title
-        updateUserInterfaceTitle();
+        logStateChange();
     }
 
 
@@ -128,9 +117,8 @@ public class BluetoothChatService {
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
         // Send the name of the connected device back to the UI Activity
-        //TODO init
-
-        updateUserInterfaceTitle();
+        write("reqinit".getBytes());
+        logStateChange();
     }
 
 
@@ -149,7 +137,7 @@ public class BluetoothChatService {
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+        logStateChange();
     }
 
 
@@ -171,7 +159,7 @@ public class BluetoothChatService {
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+        logStateChange();
 
         // Start the service over to restart listening mode
         BluetoothChatService.this.start();
@@ -184,7 +172,7 @@ public class BluetoothChatService {
 
         mState = STATE_NONE;
         // Update UI title
-        updateUserInterfaceTitle();
+        logStateChange();
 
         // Start the service over to restart listening mode
         BluetoothChatService.this.start();
@@ -302,7 +290,6 @@ public class BluetoothChatService {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
@@ -319,7 +306,4 @@ public class BluetoothChatService {
             }
         }
     }
-
 }
-
-

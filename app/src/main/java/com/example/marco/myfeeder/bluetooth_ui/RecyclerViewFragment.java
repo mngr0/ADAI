@@ -72,4 +72,9 @@ public class RecyclerViewFragment extends Fragment {
         return mAdapter.getItemCount();
     }
 
+
+    public void connectToAddress(String address){
+        mAdapter.connectToAddress(address);
+    }
+
 }

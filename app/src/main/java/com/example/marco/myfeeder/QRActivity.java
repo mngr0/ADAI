@@ -12,7 +12,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.TextView;
 
 import com.example.marco.myfeeder.bluetooth_ui.BluetoothConnect;
 import com.google.android.gms.vision.CameraSource;
@@ -84,7 +83,7 @@ public class QRActivity extends AppCompatActivity {
                             Log.d("QRA",barcode);
                             Intent intent = new Intent();
                             intent.setData(Uri.parse(barcode));
-                            //intent.putExtra("qrcode", barcode);
+                            //intent.putExtra("qrcode", barcode); maybe a day may be usefull
                             setResult(Activity.RESULT_OK, intent);
                             finish();
                         }

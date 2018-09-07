@@ -13,23 +13,30 @@ import java.util.Arrays;
 public class Configuration {
 
     private static BluetoothChatService mBCS;
+
+    public static String getLog() {
+        return log;
+    }
+
     private static class Format{
         public String name;//max 16 chars
         public int times[];
     }
     public static final int size = 8;
     public static final int length = 32;
-    private String log;
+    private static String log;
     private static int active;//min 0, max 7
     private static Format formats[];
-
+    private static boolean initialized;
+    private static LogReceivedListener mListener;
     static{
+        initialized=false;
         formats=new Format[size];
         active=3;
         for(int i=0; i<size; i++){
 
             formats[i]=new Format();
-            formats[i].name= "Formato "+i;
+            formats[i].name= "Format "+i;
             formats[i].times= new int[length];
             for (int j=0;j<2; j++){
                 formats[i].times[j]=1;
@@ -40,11 +47,6 @@ public class Configuration {
 
         }
     }
-    public static void init(String received){
-        deserialize(received);
-    }
-
-
 
     private static String serialize(){
         String ser="";
@@ -74,6 +76,11 @@ public class Configuration {
                     String [] recv = readMessage.split("/");
                     if(recv[0].equals("init")){
                         deserialize(recv[1]);
+                        initialized=true;
+                    }
+                    else if (recv[0].equals("init")){
+                        log=recv[1];
+                        mListener.notify();
                     }
             }
         }
@@ -84,15 +91,17 @@ public class Configuration {
     }
 
 
-    public static String readLog(){
+    public static boolean readLog(LogReceivedListener listener){
         mBCS= BluetoothChatService.getInstance();
         if(mBCS.isConnected()){
             mBCS.write("logrequest".getBytes());
-            //mBCS.read();
+            mListener=listener;
+            return true;
         }else{
             Log.d("Conf","unable to connect");
+            return false;
         }
-        return "";
+
     }
 
     private static void deserialize(String received){
@@ -155,8 +164,12 @@ public class Configuration {
                 formats[index].times[i]=-1;
             }
         }
+        update();
     }
 
+    public static boolean isInitialized() {
+        return initialized;
+    }
 
     private Configuration(){}
 

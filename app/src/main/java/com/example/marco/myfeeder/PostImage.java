@@ -17,9 +17,10 @@ import java.net.URL;
 
 public class PostImage extends AsyncTask<Void, Void, Void> {
     String target;
-
-    PostImage( String arg){
+    String log;
+    PostImage( String arg,String mLog){
         target=arg;
+        log=mLog;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class PostImage extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            String response = postImageToImagga(target);
+            String response = postImage(target);
             Log.i("altadns", response);
         } catch (Exception e) {
             Log.d("BACKGROUND", e.toString());
@@ -40,7 +41,7 @@ public class PostImage extends AsyncTask<Void, Void, Void> {
 
 
 
-    public String postImageToImagga(String filepath) throws Exception {
+    public String postImage(String filepath) throws Exception {
 
         Log.d("upload", "starting, received " + filepath);
         HttpURLConnection connection = null;
@@ -79,7 +80,10 @@ public class PostImage extends AsyncTask<Void, Void, Void> {
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             outputStream.writeBytes("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + q[idx] +"\"" + lineEnd);
             outputStream.writeBytes("Content-Type: image/jpeg" + lineEnd);
+            outputStream.writeBytes("Content-Type: image/jpeg" + lineEnd);
             outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes("Log: "+ lineEnd + log + lineEnd);
+
 
 
             FileInputStream fileInputStream = new FileInputStream(file);

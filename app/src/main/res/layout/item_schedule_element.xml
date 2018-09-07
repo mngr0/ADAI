@@ -32,10 +32,8 @@
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Spazio"
-            app:layout_constraintBottom_toBottomOf="@+id/spaceText"
+            android:text="Space"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/spaceText" />
 
@@ -55,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="tratto"
+            android:text="Line"
             app:layout_constraintBottom_toBottomOf="@+id/lineText"
             app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="@+id/lineText" />

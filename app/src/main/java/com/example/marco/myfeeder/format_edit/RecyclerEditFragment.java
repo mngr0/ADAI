@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,18 +62,14 @@ public class RecyclerEditFragment extends Fragment {
 
 
     public int[] getTimes() {
-
-        int[] val= new int[mLayoutManager.getItemCount()*2];
-        for (int i=0;i<mLayoutManager.getItemCount();i++){
-            val[i*2]=Integer.parseInt(((EditText)mLayoutManager.getChildAt(i).findViewById(R.id.spaceText)).getText().toString());
-            val[i*2+1]=Integer.parseInt(((EditText)mLayoutManager.getChildAt(i).findViewById(R.id.lineText)).getText().toString());
-        }
-        return val;
+        return mAdapter.getTimes();
     }
 
     public void addElementTail(){
-        mAdapter.addItem(50,100);
-        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+        if(mAdapter.getItemCount()<16) {
+            mAdapter.addItem(50, 100);
+            mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+        }
     }
 
     public void setIndex(int index) {

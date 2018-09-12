@@ -36,51 +36,68 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
             line =mline;
         }
     }
+    /*
+    private class SpaceLineText {
+        EditText space;
+        EditText line;
+        SpaceLineText(EditText mspace, EditText mline){
+            space =mspace;
+            line =mline;
+        }
+    }
+    */
+
 
     private ArrayList<SpaceLine> mItems;
+    //private ArrayList<SpaceLine> mItemsText;
+
 
     class RemoveListener implements View.OnClickListener {
 
-        private ArrayList<SpaceLine> mItems;
-        private int mIndex;
+        //private ArrayList<SpaceLine> mItems;
+        private SpaceLine mItem;
         private FormatAdapter mAdapter;
 
-        private RemoveListener(FormatAdapter adapter, ArrayList<SpaceLine> items, int index) {
-            mItems = items;
-            mIndex = index;
+        private RemoveListener(FormatAdapter adapter, SpaceLine item) {
+            //mItems = items;
+            mItem = item;
             mAdapter = adapter;
         }
 
         @Override
         public void onClick(View v) {
-            mItems.remove(mIndex);
+            mItems.remove(mItem);
+
             mAdapter.notifyDataSetChanged();
         }
     }
-    private class EditListener implements TextWatcher {
-        private ArrayList<SpaceLine> mItems;
-        private int mIndex;
-        String mKind;
-        private EditListener(ArrayList<SpaceLine> items, int index,String kind) {
-            mItems = items;
-            mIndex = index;
+
+
+    private class EditListener implements View.OnFocusChangeListener {
+        private SpaceLine mSLItem;
+        private String mKind;
+        private EditListener(SpaceLine item,String kind) {
+            mSLItem = item;
             mKind=kind;
         }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(mKind.equals("line")){
-                mItems.get(mIndex).line=s.toString();
-            }else{
-                mItems.get(mIndex).space=s.toString();
-            }
-            Log.d("textwatcher","edited" + s.toString());
-        }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-        @Override
-        public void afterTextChanged(Editable s) {}
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(mItems.contains(mSLItem)){
+                if(mKind.equals("line")){
+                    mSLItem.line=((EditText) v).getText().toString();
+                }else{
+                    mSLItem.space=((EditText) v).getText().toString();
+                }
+            }
+            Log.d("textwatcher "+mItems.indexOf(mSLItem),"edited" + ((EditText) v).getText().toString());
+            for (int i=0;i<mItems.size();i++) {
+                Log.d("STATE", i+" -- "+mItems.get(i).space);
+                Log.d("STATE", i+" -- "+mItems.get(i).line);
+            }
+
+        }
     }
 
 
@@ -137,9 +154,10 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems, position));
-        viewHolder.getLineText().addTextChangedListener(new EditListener(mItems,position,"line"));
-        viewHolder.getSpaceText().addTextChangedListener(new EditListener(mItems,position,"space"));
+        viewHolder.getButton().setOnClickListener(new RemoveListener(this, mItems.get(position)));
+        viewHolder.getLineText().setOnFocusChangeListener(new EditListener(mItems.get(position),"line"));
+        viewHolder.getSpaceText().setOnFocusChangeListener(new EditListener(mItems.get(position),"space"));
+
         viewHolder.setSpaceText(mItems.get(position).space);
         viewHolder.setLineText(mItems.get(position).line);
     }
@@ -159,9 +177,6 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     }
 
     public int[] getTimes() {
-        //mLayoutManager = getActivity().findViewById()
-
-        //Log.d("getTimes",""+mLayoutManager.getItemCount());
         int[] val= new int[mItems.size()*2];
         for (int i=0;i<mItems.size();i++){
             Log.d("getTimes",""+i);

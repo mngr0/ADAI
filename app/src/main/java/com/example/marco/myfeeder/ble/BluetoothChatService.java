@@ -26,7 +26,7 @@ public class BluetoothChatService {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
-    private int mNewState;
+
 
     // Constants that indicate the current connection state
     private static final int STATE_NONE = 0;       // we're doing nothing
@@ -45,7 +45,6 @@ public class BluetoothChatService {
     private BluetoothChatService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
-        mNewState = mState;
         mHandler = handler;
     }
 
@@ -53,9 +52,9 @@ public class BluetoothChatService {
         return mState == STATE_CONNECTED;
     }
 
-    private synchronized void logStateChange() {
-        Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
-        mNewState = mState;
+    private synchronized void logStateChange(int newState) {
+        Log.d(TAG, "updateUserInterfaceTitle() " + mState + " -> " + newState);
+        mState = newState;
     }
 
     public synchronized void start() {
@@ -70,7 +69,7 @@ public class BluetoothChatService {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-        logStateChange();
+        logStateChange(STATE_NONE);
     }
 
 
@@ -94,7 +93,7 @@ public class BluetoothChatService {
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
-        logStateChange();
+        logStateChange(STATE_CONNECTING);
     }
 
 
@@ -117,8 +116,9 @@ public class BluetoothChatService {
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
         // Send the name of the connected device back to the UI Activity
+
+        logStateChange(STATE_CONNECTED);
         write("reqinit".getBytes());
-        logStateChange();
     }
 
 
@@ -135,9 +135,7 @@ public class BluetoothChatService {
             mConnectedThread = null;
         }
 
-        mState = STATE_NONE;
-        // Update UI title
-        logStateChange();
+        logStateChange(STATE_NONE);
     }
 
 
@@ -150,6 +148,8 @@ public class BluetoothChatService {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
+        String s= new String(out);
+        Log.d("write","WRITING "+ s);
         r.write(out);
     }
 
@@ -157,25 +157,21 @@ public class BluetoothChatService {
         Log.d(TAG, "connection failed");
         // Send a failure message back to the Activity
 
-        mState = STATE_NONE;
-        // Update UI title
-        logStateChange();
+        logStateChange(STATE_NONE);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        //BluetoothChatService.this.start();
     }
 
 
     private void connectionLost() {
         Log.d(TAG, "connection lost");
-        // Send a failure message back to the Activity
 
-        mState = STATE_NONE;
         // Update UI title
-        logStateChange();
+        logStateChange(STATE_NONE);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        //BluetoothChatService.this.start();
     }
 
     private class ConnectThread extends Thread {
@@ -193,7 +189,7 @@ public class BluetoothChatService {
                 Log.e(TAG, "Socket Type: SerialPortServiceClass_UUID create() failed", e);
             }
             mmSocket = tmp;
-            mState = STATE_CONNECTING;
+            //mState = STATE_CONNECTING;
         }
 
         public void run() {
@@ -260,7 +256,7 @@ public class BluetoothChatService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
-            mState = STATE_CONNECTED;
+            //  mState = STATE_CONNECTED;
         }
 
         public void run() {
@@ -274,6 +270,10 @@ public class BluetoothChatService {
                     // Read from the InputStream
                     //try
                     bytes = mmInStream.read(buffer);
+                    String s= new String(buffer);
+                    Log.d("read", "READING:"+ s);
+                    Configuration.deserialize(s);
+
                     //read setted value
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)

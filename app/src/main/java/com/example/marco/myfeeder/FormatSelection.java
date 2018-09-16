@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marco.myfeeder.ble.BluetoothChatService;
 import com.example.marco.myfeeder.format_edit.FormatEdit;
 
 public class FormatSelection extends AppCompatActivity {
@@ -98,7 +99,13 @@ public class FormatSelection extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setRadio(Configuration.getActive(), true);
+        for (int i = 0; i < Configuration.size; i++) {
+            if (i != Configuration.getActive()) {
+                ((RadioButton) viewArray[i].findViewById(R.id.radioButton3)).setChecked(false);
+            } else {
+                ((RadioButton) viewArray[i].findViewById(R.id.radioButton3)).setChecked(true);
+            }
+        }
     }
 
     public void showFormatEdit(int index) {

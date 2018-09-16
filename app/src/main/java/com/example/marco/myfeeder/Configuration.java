@@ -29,6 +29,7 @@ public class Configuration {
     private static Format formats[];
     private static boolean initialized;
     private static LogReceivedListener mListener;
+
     static{
         initialized=false;
         formats=new Format[size];
@@ -104,19 +105,23 @@ public class Configuration {
 
     }
 
-    private static void deserialize(String received){
+    public static void deserialize(String received){
+        Log.d("des", received);
         String pieces [] = received.split("#");
         active= Integer.parseInt(pieces[0]);
-        for (int i=0; i<size; i++){
+        for (int i=1; i<size; i++){
+            Log.d("des piece"+i, pieces[i]);
             String [] parts = pieces[i].split(";");
-            formats[i].name= parts[0];
-            for (int j=0;j<length;j++){
-                formats[i].times[j]=Integer.parseInt(parts[j]);
+            formats[i-1].name= parts[0];
+            for (int j=1;j<length;j++){
+                Log.d("des part"+j, parts[j]);
+                formats[i-1].times[j-1]=Integer.parseInt(parts[j]);
             }
         }
     }
 
     private static void update(){
+        Log.d("Conf","updating");
         mBCS= BluetoothChatService.getInstance();
         if(mBCS.isConnected()){
             mBCS.write(serialize().getBytes());
@@ -135,6 +140,7 @@ public class Configuration {
     }
 
     public static void setActive(int i){
+        Log.d("Conf","setting active");
         if((i<size)&&(i>=0)){
             active=i;
             update();
@@ -142,6 +148,7 @@ public class Configuration {
     }
 
     public static void setName(int index,String s) {
+        Log.d("Conf","setting name");
         //check len < 16
         formats[index].name=s;
         update();

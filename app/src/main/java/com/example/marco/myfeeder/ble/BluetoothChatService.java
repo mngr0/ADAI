@@ -22,7 +22,6 @@ public class BluetoothChatService {
     private static final UUID SerialPortServiceClass_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     // Member fields
     private final BluetoothAdapter mAdapter;
-    private final Handler mHandler;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
@@ -37,15 +36,14 @@ public class BluetoothChatService {
 
     public static BluetoothChatService getInstance() {
         if (instance == null) {
-            instance = new BluetoothChatService(Configuration.getHandler());
+            instance = new BluetoothChatService();
         }
         return instance;
     }
 
-    private BluetoothChatService(Handler handler) {
+    private BluetoothChatService() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
-        mHandler = handler;
     }
 
     public boolean isConnected(){
@@ -159,8 +157,6 @@ public class BluetoothChatService {
 
         logStateChange(STATE_NONE);
 
-        // Start the service over to restart listening mode
-        //BluetoothChatService.this.start();
     }
 
 
@@ -170,8 +166,6 @@ public class BluetoothChatService {
         // Update UI title
         logStateChange(STATE_NONE);
 
-        // Start the service over to restart listening mode
-        //BluetoothChatService.this.start();
     }
 
     private class ConnectThread extends Thread {
@@ -189,7 +183,6 @@ public class BluetoothChatService {
                 Log.e(TAG, "Socket Type: SerialPortServiceClass_UUID create() failed", e);
             }
             mmSocket = tmp;
-            //mState = STATE_CONNECTING;
         }
 
         public void run() {
@@ -256,7 +249,6 @@ public class BluetoothChatService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
-            //  mState = STATE_CONNECTED;
         }
 
         public void run() {
@@ -271,13 +263,15 @@ public class BluetoothChatService {
                     //try
                     bytes = mmInStream.read(buffer);
                     String s= new String(buffer);
-                    Log.d("read", "READING:"+ s);
-                    Configuration.deserialize(s);
-
+                    if(s.startsWith("ini:")) {
+                        Configuration.deserialize(s.substring(4,4+bytes));
+                        Log.d("read", "READING:"+ s.substring(4,4+bytes));
+                    }
+                    else if(s.startsWith("log:")){
+                        Configuration.logReceived(s.substring(4,4+bytes));
+                        Log.d("read", "READING:"+ s.substring(4,4+bytes));
+                    }
                     //read setted value
-                    // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -290,9 +284,6 @@ public class BluetoothChatService {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-                // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

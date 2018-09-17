@@ -1,9 +1,13 @@
 package com.example.marco.myfeeder;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -20,6 +24,7 @@ public class SendReport extends AppCompatActivity {
     private boolean imageChosen=false;
     private String picturePath;
 
+    public static final int REQUEST_GRANTED = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,25 +35,32 @@ public class SendReport extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Toast toast = Toast.makeText(getApplicationContext(), "photo taken!", Toast.LENGTH_SHORT);
         toast.show();
-        if(resultCode == RESULT_OK) {
-
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            ImageView imageView = (ImageView) findViewById(R.id.imgView);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            imageChosen=true;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_GRANTED);
         }
-        else{
-            Log.e("LOADING", "return code not ok");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            if (resultCode == RESULT_OK) {
+                Log.d("photo", "resok");
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+
+                ImageView imageView = (ImageView) findViewById(R.id.imgView);
+                imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                imageChosen = true;
+            } else {
+                Log.e("LOADING", "return code not ok");
+            }
         }
     }
 

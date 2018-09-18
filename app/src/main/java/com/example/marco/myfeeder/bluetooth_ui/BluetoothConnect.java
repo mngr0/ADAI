@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.marco.myfeeder.Configuration;
 import com.example.marco.myfeeder.QRActivity;
 import com.example.marco.myfeeder.R;
+import com.example.marco.myfeeder.ble.BluetoothChatService;
 
 import java.util.Set;
 
@@ -171,26 +172,10 @@ public class BluetoothConnect extends AppCompatActivity {
         }
     }
 
-
-    private AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            mBtAdapter.cancelDiscovery();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);
-
-            // Create the result Intent and include the MAC address
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-        }
-    };
+    public void disconnect(View view){
+        BluetoothChatService.getInstance().write("q".getBytes());
+        BluetoothChatService.getInstance().stop();
+    }
 
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -219,19 +204,6 @@ public class BluetoothConnect extends AppCompatActivity {
                     //  mNewDevicesArrayAdapter.add(noDevices);
                     mFragment.addElementIn("nothing found","", null);
                 }
-            }
-        }
-    };
-
-    private final BroadcastReceiver mQRReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("QRR",intent.getData().toString());
-            String action = intent.getAction();
-
-            // When discovery finds a device
-            if (EXTRA_DEVICE_ADDRESS.equals(action)) {
-                Log.d("QRRi",intent.getData().toString());
             }
         }
     };

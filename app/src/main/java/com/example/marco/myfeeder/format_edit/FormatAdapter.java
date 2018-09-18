@@ -36,21 +36,8 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
             line =mline;
         }
     }
-    /*
-    private class SpaceLineText {
-        EditText space;
-        EditText line;
-        SpaceLineText(EditText mspace, EditText mline){
-            space =mspace;
-            line =mline;
-        }
-    }
-    */
-
 
     private ArrayList<SpaceLine> mItems;
-    //private ArrayList<SpaceLine> mItemsText;
-
 
     class RemoveListener implements View.OnClickListener {
 

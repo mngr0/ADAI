@@ -70,6 +70,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 Log.d("BTC", "connect" + mAddresses.get(position));
                 if (mDevices.get(position) != null) {
                     BluetoothChatService.getInstance().connect(mDevices.get(position));
+                    //BluetoothChatService.getInstance().write("reqinit".getBytes());
                 } else {
                     Log.e("BTC", "device null");
                 }

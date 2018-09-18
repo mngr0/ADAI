@@ -1,12 +1,9 @@
 package com.example.marco.myfeeder;
 
-import android.annotation.SuppressLint;
-import android.os.Message;
+
 import android.util.Log;
-import android.os.Handler;
 
 import com.example.marco.myfeeder.ble.BluetoothChatService;
-import com.example.marco.myfeeder.ble.Constants;
 
 import java.util.Arrays;
 
@@ -27,10 +24,9 @@ public class Configuration {
     private static String log;
     private static int active;//min 0, max 7
     private static Format formats[];
-    private static boolean initialized;
     private static LogReceivedListener mListener;
+
     static{
-        initialized=false;
         formats=new Format[size];
         active=3;
         for(int i=0; i<size; i++){
@@ -65,29 +61,8 @@ public class Configuration {
 
 
 
-    @SuppressLint("HandlerLeak")
-    private static final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            if (msg.what == Constants.MESSAGE_READ){
-                    byte[] readBuf = (byte[]) msg.obj;
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    String [] recv = readMessage.split("/");
-                    if(recv[0].equals("init")){
-                        deserialize(recv[1]);
-                        initialized=true;
-                    }
-                    else if (recv[0].equals("init")){
-                        log=recv[1];
-                        mListener.notify();
-                    }
-            }
-        }
-    };
-
-    public static Handler getHandler(){
-        return mHandler;
+    public static void logReceived(String mLog){
+        log=mLog;
     }
 
 
@@ -104,14 +79,14 @@ public class Configuration {
 
     }
 
-    private static void deserialize(String received){
+    public static void deserialize(String received){
         String pieces [] = received.split("#");
         active= Integer.parseInt(pieces[0]);
-        for (int i=0; i<size; i++){
+        for (int i=1; i<size; i++){
             String [] parts = pieces[i].split(";");
-            formats[i].name= parts[0];
-            for (int j=0;j<length;j++){
-                formats[i].times[j]=Integer.parseInt(parts[j]);
+            formats[i-1].name= parts[0];
+            for (int j=1;j<length;j++){
+                formats[i-1].times[j-1]=Integer.parseInt(parts[j]);
             }
         }
     }
@@ -165,10 +140,6 @@ public class Configuration {
             }
         }
         update();
-    }
-
-    public static boolean isInitialized() {
-        return initialized;
     }
 
     private Configuration(){}
